@@ -20,7 +20,7 @@ void matriz_atribui(Matriz *m, int lin, int col, int valor);
 void matriz_imprime(Matriz *m);
 int matriz_linhas(Matriz* m);
 int matriz_colunas(Matriz* m);
-//void matriz_map1(Matriz* m, void (*funcao)(int*));
+void matriz_map1(Matriz* m, void (*funcao)(int*));
 Vetor* matriz_vetorlinha(Matriz* m, int lin);
 Vetor* matriz_vetorcoluna(Matriz* m, int coluna);
 Matriz* matriz_multiplica(Matriz* a, Matriz* b);
@@ -86,6 +86,13 @@ int matriz_colunas(Matriz* m){
     return m->colunas;
 }
 
+void matriz_map1(Matriz* m, void (*funcao)(int*)){
+    for(int i = 0; i < m->linhas; i++){
+        for(int j = 0; j < m->colunas; j++){
+            funcao(&m->mat[i][j]);
+        }
+    }
+}
 
 Vetor* matriz_vetorlinha(Matriz* m, int lin){
     Vetor* v = (Vetor*) malloc(sizeof(Vetor));
@@ -102,7 +109,7 @@ Vetor* matriz_vetorcoluna(Matriz* m, int coluna){
     v->vetor = (int*) calloc(m->linhas,sizeof(int));
     v->qte_elementos = m->linhas;
     for(int i = 0; i < m->linhas; i++){
-        v->vetor[i] = m->mat[coluna][i];
+        v->vetor[i] = m->mat[i][coluna];
     }
     return v;
 }
@@ -235,4 +242,5 @@ Matriz* matriz_oposta(Matriz* m){
             m1->mat[i][j] = -1*(m->mat[i][j]);
         }
     }
+    return m1;
 }
