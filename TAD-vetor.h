@@ -11,6 +11,8 @@ typedef int DataType;
 typedef enum {false, true} Boolean;
 #define LENGTH 5
 
+//  PARTE 1
+
 Vetor* vetor_new();
 void vetor_free(Vetor* v);
 void vetor_print(Vetor *m);
@@ -29,6 +31,12 @@ void vetor_map(Vetor* v, void (*funcao)(DataType*));
 Vetor* vetor_sub1(Vetor* v, int index);
 Vetor* vetor_sub2(Vetor* v, int start, int end);
 int vetor_size(Vetor* v);
+
+// PARTE 2
+Vetor* vetor_filter(Vetor* v, Boolean (*funcao)(DataType*));
+void vetor_sort(Vetor *v);
+
+void vetor_genericSort(Vetor *v, int (*pfuncao)(DataType *a, DataType *b));
 
 Vetor* vetor_new(){
     Vetor* v1= (Vetor*) malloc(sizeof(Vetor));
@@ -130,7 +138,7 @@ void vetor_reduce(Vetor *v){
     }
     free(v->vetor);
     v->vetor = v1;
-    v->length/2;
+    v->length /= 2;
 }
 
 void vetor_remove_verify(Vetor *v){
@@ -287,4 +295,71 @@ Vetor* vetor_sub2(Vetor* v, int start, int end){
 
 int vetor_size(Vetor* v){
     return v->size;
+}
+
+
+//
+
+Boolean ehPar(DataType* ptr){
+    return (*ptr % 2 == 0 ? true : false);
+}
+Boolean ehImpar(DataType* ptr){
+    return (*ptr % 2 == 0 ? false : true);
+}
+
+//
+Vetor* vetor_filter(Vetor* v, Boolean (*funcao)(DataType*)){
+    int cont = 0;
+    for(int i = 0; i < v->size; i++){
+        if(funcao(&v->vetor[i])){
+            cont++;
+        }
+    }
+    Vetor* v1 = (Vetor*) malloc(sizeof(Vetor));
+    v1->vetor = (DataType*) calloc(cont,sizeof(DataType));
+    v1->length = cont;
+    v1->size = cont;
+    for(int i = 0, j = 0; i < v->size; i++){
+        if(funcao(&v->vetor[i])){
+            v1->vetor[j] = v->vetor[i];
+            j++;
+        }
+    }
+    return v1;
+}
+
+void vetor_sort(Vetor *v){
+    for(int i = v->length-1 ; i > 0; i--){
+        int houvetroca = 0;
+        for(int j = 0; j < i; j++){
+            if(v->vetor[j] > v->vetor[j+1]){
+                DataType x = v->vetor[j+1];
+                v->vetor[j+1] = v->vetor[j];
+                v->vetor[j] = x;
+                houvetroca++;
+            }
+        }
+        if(houvetroca == 0){break;}
+    }
+}
+
+int compara(DataType* a, DataType* b){
+    if(*a > *b) return 1;
+    else if (*a < *b) return -1;
+    else return 0;
+}
+
+void vetor_genericSort(Vetor *v, int (*pfuncao)(DataType *a, DataType *b)){
+    for( int i = v->length-1; i > 0; i--){
+        int houvetroca = 0;
+        for(int j = 0; j < i; j++){
+            if(pfuncao(&v->vetor[j], &v->vetor[j+1])){
+                DataType x = v->vetor[j+1];
+                v->vetor[j+1] = v->vetor[j];
+                v->vetor[j] = x;
+                houvetroca++;
+            }
+        }
+        if(houvetroca == 0){break;}
+    }
 }
