@@ -38,6 +38,9 @@ void vetor_sort(Vetor *v);
 
 void vetor_genericSort(Vetor *v, int (*pfuncao)(DataType *a, DataType *b));
 
+//Parte 3
+int vetor_import(Vetor *v, char *nomeArquivo);
+
 Vetor* vetor_new(){
     Vetor* v1= (Vetor*) malloc(sizeof(Vetor));
     v1->vetor = (DataType*) calloc(LENGTH, sizeof(DataType)); 
@@ -362,4 +365,8 @@ void vetor_genericSort(Vetor *v, int (*pfuncao)(DataType *a, DataType *b)){
         }
         if(houvetroca == 0){break;}
     }
+}
+
+int vetor_import(Vetor* v, char* nomeArquivo){
+
 }
